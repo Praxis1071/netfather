@@ -26,10 +26,6 @@ APP_CSS = """
     margin-bottom: 2px;
 }
 
-.page-subtitle {
-    line-height: 1.35;
-}
-
 .mono-value {
     font-family: monospace;
 }
