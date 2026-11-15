@@ -129,4 +129,5 @@ These platform references are the source of truth for native GTK/Libadwaita conv
 
 - 2026-11-15: Established shared page spacing, page title/subtitle classes, metric-card styling, semantic status colors, and boxed-list spacing on main. CI passed for Python 3.12, 3.13, 3.14, editable install, nftables integration, and GTK4 adaptive/lifecycle checks.
 - 2026-11-15: Added immutable pre-change backups for Devices, Discovery, Topology, Profiles, and Rules under backups/ui-before-next-pass-2026-11-15/; refined their list hierarchy, status readability, details surfaces, and advanced-options presentation. No service or policy logic was intentionally changed.
-- Next: inspect the rendered GTK pages and CI results; then review Dashboard, Monitoring, and Events for any remaining presentation gaps.
+- 2026-11-15: Added immutable backups for Monitoring and Events before a final visual pass. Monitoring status surface spacing is now consistent; event severity uses semantic status styling while retaining its text label.
+- Next: verify the latest CI runs, then perform a final diff and design-compliance review across all changed GUI files.
