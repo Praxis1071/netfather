@@ -35,7 +35,11 @@ class ProfilesPage(BasePage):
         self.append(field(tr("Devices"), self.device))
         for label, callback in ((tr("Assign device"), self._assign), (tr("Unassign device"), self._unassign), (tr("Delete profile"), self._delete)):
             button = Gtk.Button(label=label); button.connect("clicked", callback); self.append(button)
-        self.details = Gtk.Label(xalign=0, wrap=True, selectable=True); self.append(self.details)
+        self.details = Gtk.Label(xalign=0, wrap=True, selectable=True)
+        self.details.add_css_class("card")
+        for edge in ("top", "bottom", "start", "end"):
+            getattr(self.details, f"set_margin_{edge}")(10)
+        self.append(self.details)
         self.legacy_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         expander = Gtk.Expander(label=tr("Existing device-bound profiles")); expander.set_child(self.legacy_box); self.append(expander)
         self.status = Gtk.Label(xalign=0, wrap=True); self.append(self.status)
@@ -64,7 +68,20 @@ class ProfilesPage(BasePage):
         selected_row = None
         for profile in profiles:
             row = Gtk.ListBoxRow(); row.set_name(str(profile.id))
-            row.set_child(Gtk.Label(label=f"{profile.name} | {tr(profile.internet_mode.title())} | {len(self.assignments[profile.id])}", xalign=0, wrap=True))
+            content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            content.set_margin_top(8); content.set_margin_bottom(8)
+            content.set_margin_start(10); content.set_margin_end(10)
+            title = Gtk.Label(label=profile.name, xalign=0, wrap=True)
+            title.add_css_class("heading")
+            content.append(title)
+            subtitle = Gtk.Label(
+                label=tr(profile.internet_mode.title()) + "  ·  " + tr("{v0} assigned", v0=len(self.assignments[profile.id])),
+                xalign=0,
+                wrap=True,
+            )
+            subtitle.add_css_class("dim-label")
+            content.append(subtitle)
+            row.set_child(content)
             self.list_box.append(row)
             if profile.id == selected: selected_row = row
         self.list_box.select_row(selected_row)
