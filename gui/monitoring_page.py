@@ -22,7 +22,11 @@ class MonitoringPage(Gtk.Box):
         title = Gtk.Label(label=tr('Monitoring'), xalign=0); title.add_css_class("title-1"); title.add_css_class("page-title"); self.append(title)
         subtitle = Gtk.Label(label=tr('Live interface counters and effective policy activity. Monitoring is observation-only.'), xalign=0, wrap=True); subtitle.add_css_class("dim-label"); subtitle.add_css_class("page-subtitle"); self.append(subtitle)
 
-        self.status = Gtk.Label(label=tr('Starting monitor…'), xalign=0, wrap=True); self.status.add_css_class("card"); self.append(self.status)
+        self.status = Gtk.Label(label=tr('Starting monitor…'), xalign=0, wrap=True)
+        self.status.add_css_class("card")
+        for edge in ("top", "bottom", "start", "end"):
+            getattr(self.status, f"set_margin_{edge}")(10)
+        self.append(self.status)
         grid = Gtk.Grid(column_spacing=14, row_spacing=14); grid.set_hexpand(True)
         self.sent = self._metric(grid, tr('Sent'), 0, 0); self.received = self._metric(grid, tr('Received'), 1, 0)
         self.packets = self._metric(grid, tr('Packets'), 2, 0); self.errors = self._metric(grid, tr('Errors / Drops'), 3, 0)
