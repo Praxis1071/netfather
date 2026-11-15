@@ -75,7 +75,7 @@ class ProfilesPage(BasePage):
             title.add_css_class("heading")
             content.append(title)
             subtitle = Gtk.Label(
-                label=tr(profile.internet_mode.title()) + "  ·  " + tr("{v0} assigned", v0=len(self.assignments[profile.id])),
+                label=tr(profile.internet_mode.title()) + "  ·  " + str(len(self.assignments[profile.id])) + " " + tr("Devices"),
                 xalign=0,
                 wrap=True,
             )
