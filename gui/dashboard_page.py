@@ -49,11 +49,12 @@ class DashboardPage(Gtk.Box):
     """Network control-center dashboard backed by real backend snapshots."""
 
     def __init__(self, database: Database, state: ApplicationState, tasks: BackgroundTaskRunner) -> None:
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=22)
+        self.add_css_class("workspace-page")
         self.set_margin_top(28)
         self.set_margin_bottom(28)
-        self.set_margin_start(32)
-        self.set_margin_end(32)
+        self.set_margin_start(28)
+        self.set_margin_end(28)
         self.database = database
         self.state = state
         self.tasks = tasks
@@ -63,6 +64,7 @@ class DashboardPage(Gtk.Box):
 
         heading = Gtk.Label(label=tr('Dashboard'), xalign=0)
         heading.add_css_class("title-1")
+        heading.add_css_class("page-title")
         self.append(heading)
         subtitle = Gtk.Label(
             label=tr('A live overview of your local network, devices and effective access policy.'),
@@ -70,9 +72,10 @@ class DashboardPage(Gtk.Box):
             wrap=True,
         )
         subtitle.add_css_class("dim-label")
+        subtitle.add_css_class("page-subtitle")
         self.append(subtitle)
 
-        cards = Gtk.Grid(column_spacing=10, row_spacing=10)
+        cards = Gtk.Grid(column_spacing=14, row_spacing=14)
         cards.set_hexpand(True)
         self.network_card = MetricCard(tr('NETWORK'), tr('Checking…'))
         self.devices_card = MetricCard(tr('DEVICES'), "—")
@@ -86,6 +89,7 @@ class DashboardPage(Gtk.Box):
 
         activity = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         activity.add_css_class("card")
+        activity.set_margin_top(2)
         self.activity_title = Gtk.Label(label=tr('Network status'), xalign=0)
         self.activity_title.add_css_class("heading")
         self.activity_status = Gtk.Label(label=tr('Loading…'), xalign=0, wrap=True)
