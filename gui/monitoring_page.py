@@ -14,15 +14,16 @@ from monitor.monitor import Monitor, TrafficSnapshot
 
 class MonitoringPage(Gtk.Box):
     def __init__(self, database: Database, tasks: BackgroundTaskRunner) -> None:
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.set_margin_top(28); self.set_margin_bottom(28); self.set_margin_start(32); self.set_margin_end(32)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+        self.add_css_class("workspace-page")
+        self.set_margin_top(28); self.set_margin_bottom(28); self.set_margin_start(28); self.set_margin_end(28)
         self.database = database; self.tasks = tasks; self._busy = False; self._paused = False; self._timer: int | None = None
 
-        title = Gtk.Label(label=tr('Monitoring'), xalign=0); title.add_css_class("title-1"); self.append(title)
-        subtitle = Gtk.Label(label=tr('Live interface counters and effective policy activity. Monitoring is observation-only.'), xalign=0, wrap=True); subtitle.add_css_class("dim-label"); self.append(subtitle)
+        title = Gtk.Label(label=tr('Monitoring'), xalign=0); title.add_css_class("title-1"); title.add_css_class("page-title"); self.append(title)
+        subtitle = Gtk.Label(label=tr('Live interface counters and effective policy activity. Monitoring is observation-only.'), xalign=0, wrap=True); subtitle.add_css_class("dim-label"); subtitle.add_css_class("page-subtitle"); self.append(subtitle)
 
         self.status = Gtk.Label(label=tr('Starting monitor…'), xalign=0, wrap=True); self.status.add_css_class("card"); self.append(self.status)
-        grid = Gtk.Grid(column_spacing=10, row_spacing=10); grid.set_hexpand(True)
+        grid = Gtk.Grid(column_spacing=14, row_spacing=14); grid.set_hexpand(True)
         self.sent = self._metric(grid, tr('Sent'), 0, 0); self.received = self._metric(grid, tr('Received'), 1, 0)
         self.packets = self._metric(grid, tr('Packets'), 2, 0); self.errors = self._metric(grid, tr('Errors / Drops'), 3, 0)
         self.allowed = self._metric(grid, tr('Allowed devices'), 0, 1); self.blocked = self._metric(grid, tr('Blocked devices'), 1, 1)
@@ -38,7 +39,7 @@ class MonitoringPage(Gtk.Box):
 
     @staticmethod
     def _metric(grid: Gtk.Grid, title: str, col: int, row: int) -> Gtk.Label:
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4); box.add_css_class("card"); box.set_hexpand(True)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4); box.add_css_class("card"); box.add_css_class("metric-card"); box.set_hexpand(True)
         heading = Gtk.Label(label=title, xalign=0); heading.add_css_class("dim-label"); value = Gtk.Label(label="—", xalign=0); value.add_css_class("title-2")
         for widget in (heading, value): widget.set_margin_start(14); widget.set_margin_end(14)
         heading.set_margin_top(12); value.set_margin_bottom(12); box.append(heading); box.append(value); grid.attach(box, col % 2, row * 2 + col // 2, 1, 1)
