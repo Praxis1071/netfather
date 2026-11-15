@@ -46,6 +46,7 @@ class TopologyPage(Gtk.Box):
         self.append(toolbar)
 
         self.status = Gtk.Label(label=tr('Ready'), xalign=0, wrap=True)
+        self.status.add_css_class("dim-label")
         self.append(self.status)
 
         self.scroller = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
@@ -93,6 +94,9 @@ class TopologyPage(Gtk.Box):
         evidence = "\n".join(f"{edge.source} → {edge.target}: {edge.evidence} | {edge.detail}" for edge in topology.edges)
         if not hasattr(self,"evidence_label"):
             self.evidence_label=Gtk.Label(xalign=0,wrap=True,selectable=True)
+            self.evidence_label.add_css_class("card")
+            for edge in ("top", "bottom", "start", "end"):
+                getattr(self.evidence_label, f"set_margin_{edge}")(10)
             self.append(self.evidence_label)
         self.evidence_label.set_text(evidence + "\n" + "\n".join(topology.warnings))
         devices = [node for node in topology.nodes if node.key.startswith("device:")]
@@ -143,12 +147,21 @@ class TopologyPage(Gtk.Box):
         row.set_margin_end(14)
         row.add_css_class("card")
 
-        state = tr('Online') if node.online else tr('Offline')
-        if not node.allowed and not is_router:
-            state += tr(' | Restricted')
-        title = Gtk.Label(label=f"{tr('Router/Gateway') if is_router else node.label}  —  {state}", xalign=0, wrap=True)
+        title = Gtk.Label(
+            label=tr('Router/Gateway') if is_router else node.label,
+            xalign=0,
+            wrap=True,
+        )
         title.add_css_class("title-3" if is_router else "heading")
         row.append(title)
+        state_text = tr('Online') if node.online else tr('Offline')
+        state_class = "status-ok" if node.online else "status-warning"
+        if not node.allowed and not is_router:
+            state_text += tr(' | Restricted')
+            state_class = "status-error"
+        state = Gtk.Label(label=state_text, xalign=0)
+        state.add_css_class(state_class)
+        row.append(state)
 
         details: list[str] = []
         if node.ip:
