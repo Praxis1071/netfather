@@ -48,7 +48,16 @@ class EventsPage(Gtk.Box):
         if not events: self.list_box.append(self.empty); return
         for event in events:
             row = Gtk.ListBoxRow(); box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5); box.set_margin_top(10); box.set_margin_bottom(10); box.set_margin_start(12); box.set_margin_end(12)
-            heading = Gtk.Label(label=f"{event.event_type}  ·  {event.severity.upper()}", xalign=0); heading.add_css_class("heading"); box.append(heading)
+            severity = (event.severity or "").lower()
+            heading = Gtk.Label(label=f"{event.event_type}  ·  {severity.upper() or tr('Unknown')}", xalign=0)
+            heading.add_css_class("heading")
+            if severity in ("critical", "error", "high"):
+                heading.add_css_class("status-error")
+            elif severity in ("warning", "warn", "medium"):
+                heading.add_css_class("status-warning")
+            else:
+                heading.add_css_class("dim-label")
+            box.append(heading)
             timestamp = to_local(event.timestamp).strftime("%Y-%m-%d %H:%M:%S %Z") if event.timestamp else tr('Unknown time')
             detail = Gtk.Label(label=f"{timestamp}  ·  {event.description}", xalign=0, wrap=True); detail.add_css_class("dim-label"); box.append(detail)
             if event.device_mac:
