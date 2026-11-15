@@ -14,11 +14,12 @@ from core.time_utils import to_local
 
 class EventsPage(Gtk.Box):
     def __init__(self, database: Database, tasks: BackgroundTaskRunner) -> None:
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.set_margin_top(28); self.set_margin_bottom(28); self.set_margin_start(32); self.set_margin_end(32)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+        self.add_css_class("workspace-page")
+        self.set_margin_top(28); self.set_margin_bottom(28); self.set_margin_start(28); self.set_margin_end(28)
         self.database = database; self.tasks = tasks; self._busy = False
-        title = Gtk.Label(label=tr('Events'), xalign=0); title.add_css_class("title-1"); self.append(title)
-        subtitle = Gtk.Label(label=tr('Recent device, discovery and policy events recorded by NetFather.'), xalign=0, wrap=True); subtitle.add_css_class("dim-label"); self.append(subtitle)
+        title = Gtk.Label(label=tr('Events'), xalign=0); title.add_css_class("title-1"); title.add_css_class("page-title"); self.append(title)
+        subtitle = Gtk.Label(label=tr('Recent device, discovery and policy events recorded by NetFather.'), xalign=0, wrap=True); subtitle.add_css_class("dim-label"); subtitle.add_css_class("page-subtitle"); self.append(subtitle)
         toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         self.refresh_button = Gtk.Button(label=tr('Refresh')); self.refresh_button.add_css_class("suggested-action"); self.refresh_button.connect("clicked", lambda _b: self.refresh()); toolbar.append(self.refresh_button)
         self.count = Gtk.Label(label="", xalign=0); self.count.add_css_class("dim-label"); toolbar.append(self.count); self.append(toolbar)
@@ -46,7 +47,7 @@ class EventsPage(Gtk.Box):
         while (child := self.list_box.get_first_child()) is not None: self.list_box.remove(child)
         if not events: self.list_box.append(self.empty); return
         for event in events:
-            row = Gtk.ListBoxRow(); box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3); box.set_margin_top(10); box.set_margin_bottom(10); box.set_margin_start(12); box.set_margin_end(12)
+            row = Gtk.ListBoxRow(); box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5); box.set_margin_top(10); box.set_margin_bottom(10); box.set_margin_start(12); box.set_margin_end(12)
             heading = Gtk.Label(label=f"{event.event_type}  ·  {event.severity.upper()}", xalign=0); heading.add_css_class("heading"); box.append(heading)
             timestamp = to_local(event.timestamp).strftime("%Y-%m-%d %H:%M:%S %Z") if event.timestamp else tr('Unknown time')
             detail = Gtk.Label(label=f"{timestamp}  ·  {event.description}", xalign=0, wrap=True); detail.add_css_class("dim-label"); box.append(detail)
