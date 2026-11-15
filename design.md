@@ -128,4 +128,5 @@ These platform references are the source of truth for native GTK/Libadwaita conv
 ## 10. Progress log
 
 - 2026-11-15: Established shared page spacing, page title/subtitle classes, metric-card styling, semantic status colors, and boxed-list spacing on main. CI passed for Python 3.12, 3.13, 3.14, editable install, nftables integration, and GTK4 adaptive/lifecycle checks.
-- Next: refine Devices, Discovery, Topology, Profiles, and Rules presentation without changing their behavior; then review remaining content pages against this standard.
+- 2026-11-15: Added immutable pre-change backups for Devices, Discovery, Topology, Profiles, and Rules under backups/ui-before-next-pass-2026-11-15/; refined their list hierarchy, status readability, details surfaces, and advanced-options presentation. No service or policy logic was intentionally changed.
+- Next: inspect the rendered GTK pages and CI results; then review Dashboard, Monitoring, and Events for any remaining presentation gaps.
